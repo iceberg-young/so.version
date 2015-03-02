@@ -26,5 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ---
 
-[SemVer.org]: http://semver.org/
+[SemVer.org]: http://semver.org/spec/v2.0.0.html
 "Semantic Versioning 2.0.0"
+
+[LGPLv3]: http://www.gnu.org/graphics/lgplv3-88x31.png
+"GNU Lesser General Public License version 3"

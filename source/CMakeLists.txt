@@ -3,7 +3,10 @@ cmake_minimum_required(VERSION 2.8.4)
 project(so.version)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-set(SOURCE_FILES version.cpp)
+set(SOURCE_FILES
+    version.cpp
+    parser.cpp
+)
 
-include_directories(../include)
 add_library(so.version STATIC ${SOURCE_FILES})
+include_directories(../include)

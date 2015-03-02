@@ -1,7 +1,9 @@
 #ifndef INCLUDE_SO_VERSION_ONCE_FLAG
 #define INCLUDE_SO_VERSION_ONCE_FLAG
 
+#include <list>
 #include <string>
+#include <stdexcept>
 
 // See <sys/sysmacros.h>, so you know how horrible C is!
 #undef major
@@ -22,13 +24,15 @@ namespace so {
             deprecated = compatible,
         };
 
+        using ids_t = std::list<std::string>;
+
     public:
         version(
-          unsigned major = 0,
-          unsigned minor = 0,
-          unsigned patch = 0,
-          const std::string& label = "",
-          const std::string& build = ""
+          size_t major = 0,
+          size_t minor = 0,
+          size_t patch = 0,
+          const ids_t& label = {},
+          const ids_t& build = {}
         ) :
           major(major),
           minor(minor),
@@ -41,32 +45,25 @@ namespace so {
         static version parse(const std::string& text);
 
     public:
-        bool is_stable() const {
-            return this->major > 0 and this->label.empty();
-        }
-
-    public:
         version next_major() const {
-            return version{this->major + 1, 0, 0, "", this->build};
+            return version{this->major + 1, 0, 0, {}, this->build};
         }
 
         version next_minor() const {
-            return version{this->major, this->minor + 1, 0, "", this->build};
+            return version{this->major, this->minor + 1, 0, {}, this->build};
         }
 
         version next_patch() const {
-            return version{this->major, this->minor, this->patch + 1, "", this->build};
+            return version{this->major, this->minor, this->patch + 1, {}, this->build};
         }
-
-        version next_pre() const;
 
     public:
         version final() const {
-            return version{this->major, this->minor, this->patch, "", this->build};
+            return version{this->major, this->minor, this->patch, {}, this->build};
         }
 
         version general() const {
-            return version{this->major, this->minor, this->patch, this->label, ""};
+            return version{this->major, this->minor, this->patch, this->label, {}};
         }
 
     public:
@@ -86,7 +83,7 @@ namespace so {
         }
 
         bool operator!=(const version& other) const {
-            return !(*this == other);
+            return not(*this == other);
         }
 
         bool operator!=(const std::string& other) const {
@@ -132,19 +129,19 @@ namespace so {
 
     public:
         // When you make incompatible API changes.
-        const unsigned major;
+        const size_t major;
 
         // When you add functionality in a backwards-compatible manner.
-        const unsigned minor;
+        const size_t minor;
 
         // When you make backwards-compatible bug fixes.
-        const unsigned patch;
+        const size_t patch;
 
         // For pre-release.
-        const std::string label;
+        const ids_t label;
 
         // For build metadata.
-        const std::string build;
+        const ids_t build;
     };
 
     inline bool operator==(const std::string& a, const version& b) {
@@ -169,6 +166,21 @@ namespace so {
 
     inline bool operator>=(const std::string& a, const version& b) {
         return version::parse(a) >= b;
+    }
+
+    class version_parse_error :
+      public std::domain_error
+    {
+    public:
+        version_parse_error(const std::string& what) :
+          domain_error(what) {
+        }
+    };
+
+    namespace is {
+        inline bool stable(const version& v) {
+            return v.major > 0 and v.label.empty();
+        }
     }
 }
 

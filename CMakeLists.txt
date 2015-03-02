@@ -5,7 +5,8 @@ project(version)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set(SOURCE_FILES example.cpp)
 
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
+
 add_subdirectory(source)
-add_executable(version ${SOURCE_FILES})
-add_dependencies(version so.version)
-target_link_libraries(version so.version)
+add_dependencies(${PROJECT_NAME} so.version)
+target_link_libraries(${PROJECT_NAME} so.version)
