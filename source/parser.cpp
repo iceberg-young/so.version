@@ -5,10 +5,10 @@
 namespace so {
     namespace {
         bool is_id(char c) {
-            return c >= '0' and c <= '9'
-              or c >= 'A' and c <= 'Z'
-              or c >= 'a' and c <= 'z'
-              or c == '-';
+            return (c >= '0' and c <= '9')
+              or (c >= 'A' and c <= 'Z')
+              or (c >= 'a' and c <= 'z')
+              or (c == '-');
         }
     }
 

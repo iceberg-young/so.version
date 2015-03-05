@@ -33,9 +33,9 @@ namespace so {
                 // Numeric identifiers always have lower precedence than non-numeric identifiers.
                 int av = numeric(*ai);
                 int bv = numeric(*bi);
-                return (av != -1)
-                  ? (bv != -1 ? av < bv : true)
-                  : (bv != -1 ? false : *ai < *bi);
+                return (av < 0)
+                  ? (bv < 0 ? av < bv : true)
+                  : (bv < 0 ? false : *ai < *bi);
             }
 
             // A larger set has a higher precedence than a smaller set,
@@ -73,7 +73,8 @@ namespace so {
             case change::incompatible: {
                 return this->next_major();
             }
-        };
+        }
+        throw type;
     }
 
     bool version::operator<(const version& other) const {
