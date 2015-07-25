@@ -11,11 +11,9 @@
 
 namespace so {
     // Representation of http://semver.org/ described object.
-    class version
-    {
-    public:
-        enum class change
-        {
+    class version {
+     public:
+        enum class change {
             internal,
             compatible,
             incompatible,
@@ -26,7 +24,7 @@ namespace so {
 
         using ids_t = std::list<std::string>;
 
-    public:
+     public:
         version(
           size_t major = 0,
           size_t minor = 0,
@@ -38,13 +36,12 @@ namespace so {
           minor(minor),
           patch(patch),
           label(label),
-          build(build) {
-        }
+          build(build) {}
 
-    public:
+     public:
         static version parse(const std::string& text);
 
-    public:
+     public:
         version next_major() const {
             return version{this->major + 1, 0, 0, {}, this->build};
         }
@@ -54,28 +51,34 @@ namespace so {
         }
 
         version next_patch() const {
-            return version{this->major, this->minor, this->patch + 1, {}, this->build};
+            return version{
+              this->major, this->minor, this->patch + 1, {}, this->build
+            };
         }
 
-    public:
+     public:
         version final() const {
-            return version{this->major, this->minor, this->patch, {}, this->build};
+            return version{
+              this->major, this->minor, this->patch, {}, this->build
+            };
         }
 
         version general() const {
-            return version{this->major, this->minor, this->patch, this->label, {}};
+            return version{
+              this->major, this->minor, this->patch, this->label, {}
+            };
         }
 
-    public:
+     public:
         version operator+(change type) const;
 
-    public:
+     public:
         bool operator==(const version& other) const {
             return this->major == other.major
               and this->minor == other.minor
               and this->patch == other.patch
               and this->label == other.label;
-            // `build` should be ignored.
+            // Build metadata does not figure into precedence.
         }
 
         bool operator==(const std::string& other) const {
@@ -83,7 +86,7 @@ namespace so {
         }
 
         bool operator!=(const version& other) const {
-            return not(*this == other);
+            return not (*this == other);
         }
 
         bool operator!=(const std::string& other) const {
@@ -120,14 +123,14 @@ namespace so {
             return *this >= version::parse(other);
         }
 
-    public:
+     public:
         std::string to_string() const;
 
         operator std::string() const {
             return this->to_string();
         }
 
-    public:
+     public:
         // When you make incompatible API changes.
         const size_t major;
 
@@ -169,12 +172,10 @@ namespace so {
     }
 
     class version_parse_error :
-      public std::domain_error
-    {
-    public:
+      public std::domain_error {
+     public:
         version_parse_error(const std::string& what) :
-          domain_error(what) {
-        }
+          domain_error(what) {}
     };
 
     namespace is {

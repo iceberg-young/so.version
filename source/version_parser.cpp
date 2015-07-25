@@ -1,6 +1,6 @@
-#include <limits>
 #include "version.hpp"
 #include "version_parser.hpp"
+#include <limits>
 
 namespace so {
     namespace {
@@ -13,19 +13,21 @@ namespace so {
     }
 
     version_parser::version_parser(const std::string& version) {
-        auto p = &version[0];
+        auto p = version.data();
         while (*p and (*p < '0' or *p > '9')) {++p;}
         this->cursor = p;
     }
 
-    void version_parser::dot() {
+    void version_parser::expect_dot() {
         if (*this->cursor != '.') {
-            throw version_parse_error{"Dot (.) is expected, but got char(" + std::to_string(*this->cursor) + ")."};
+            throw version_parse_error{
+              "Dot (.) is expected, but got char(" + std::to_string(*this->cursor) + ")."
+            };
         }
         ++this->cursor;
     }
 
-    version::ids_t version_parser::ids() {
+    version::ids_t version_parser::get_ids() {
         version::ids_t ids;
         while (*++this->cursor) {
             std::string id;
@@ -41,14 +43,20 @@ namespace so {
         return ids;
     }
 
-    size_t version_parser::number() {
+    size_t version_parser::get_number() {
         char* next = nullptr;
-        size_t value = strtoul(this->cursor, &next, 10);
+        auto value = strtoul(this->cursor, &next, 10);
         if (this->cursor == next) {
-            throw version_parse_error{"Digit is expected, but got char(" + std::to_string(*this->cursor) + ")."};
+            throw version_parse_error{
+              "Digit is expected, but got char(" + std::to_string(*this->cursor) + ")."
+            };
         }
-        if (value == std::numeric_limits<size_t>::max()) {
-            throw version_parse_error{"Number is too big, " + std::to_string(next - this->cursor) + " digits."};
+        if (value == std::numeric_limits<decltype(value)>::max()) {
+            size_t length = next - this->cursor;
+            std::string number{this->cursor, length};
+            throw version_parse_error{
+              number + " is too big (" + std::to_string(length) + " digits)."
+            };
         }
         this->cursor = next;
         return value;

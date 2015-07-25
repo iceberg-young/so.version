@@ -2,24 +2,23 @@
 #define INCLUDE_SO_VERSION_PARSER_ONCE_FLAG
 
 namespace so {
-    class version_parser
-    {
-    public:
+    class version_parser {
+     public:
         version_parser(const std::string& version);
 
-    public:
+     public:
         bool on(char c) {
             return *this->cursor == c;
         }
 
-    public:
-        void dot();
+     public:
+        void expect_dot();
 
-        version::ids_t ids();
+        version::ids_t get_ids();
 
-        size_t number();
+        size_t get_number();
 
-    private:
+     private:
         const char* cursor;
     };
 }
