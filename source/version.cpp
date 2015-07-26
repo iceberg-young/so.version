@@ -39,16 +39,20 @@ namespace so {
             // if all of the preceding identifiers are equal.
             return bi != be;
         }
-    }
 
-    std::string& operator+=(std::string& target, const version::ids_t& ids) {
-        auto i = ids.begin();
-        auto e = ids.end();
-        target += *i;
-        while (++i != e) {
-            target += '.' + *i;
+        bool operator&(version::change a, version::change b) {
+            return static_cast<int>(a) & static_cast<int>(b);
         }
-        return target;
+
+        std::string& operator+=(std::string& target, const version::ids_t& ids) {
+            auto i = ids.begin();
+            auto e = ids.end();
+            target += *i;
+            while (++i != e) {
+                target += '.' + *i;
+            }
+            return target;
+        }
     }
 
     version version::parse(std::string::const_iterator& iterator) {
@@ -69,18 +73,16 @@ namespace so {
     }
 
     version version::operator+(change type) const {
-        switch (type) {
-            case change::internal: {
-                return this->next_patch();
-            }
-            case change::compatible: {
-                return this->next_minor();
-            }
-            case change::incompatible: {
-                return this->next_major();
-            }
+        if (type & change::incompatible) {
+            return this->next_major();
         }
-        throw type;
+        if (type & change::compatible) {
+            return this->next_minor();
+        }
+        if (type & change::internal) {
+            return this->next_patch();
+        }
+        return *this;
     }
 
     bool version::operator<(const version& other) const {

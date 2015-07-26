@@ -14,12 +14,9 @@ namespace so {
     class version {
      public:
         enum class change {
-            internal,
-            compatible,
-            incompatible,
-
-            fixed = internal,
-            deprecated = compatible,
+            internal = 1,
+            compatible = 2,
+            incompatible = 4,
         };
 
         using ids_t = std::list<std::string>;
@@ -62,7 +59,7 @@ namespace so {
         }
 
      public:
-        version final() const {
+        version release() const {
             return version{
               this->major, this->minor, this->patch, {}, this->build
             };
@@ -174,6 +171,18 @@ namespace so {
 
     inline bool operator>=(const std::string& a, const version& b) {
         return version::parse(a) >= b;
+    }
+
+    inline version::change operator|(version::change a, version::change b) {
+        return static_cast<version::change>(
+          static_cast<int>(a) | static_cast<int>(b)
+        );
+    }
+
+    inline version::change operator^(version::change a, version::change b) {
+        return static_cast<version::change>(
+          static_cast<int>(a) ^ static_cast<int>(b)
+        );
     }
 
     class version_parse_error :
