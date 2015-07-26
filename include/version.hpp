@@ -39,7 +39,12 @@ namespace so {
           build(build) {}
 
      public:
-        static version parse(const std::string& text);
+        static version parse(std::string::const_iterator& iterator);
+
+        static version parse(const std::string& text) {
+            auto iterator = text.begin();
+            return version::parse(iterator);
+        }
 
      public:
         version next_major() const {

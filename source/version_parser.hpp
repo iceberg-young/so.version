@@ -4,7 +4,9 @@
 namespace so {
     class version_parser {
      public:
-        version_parser(const std::string& version);
+        using literal_t = std::string::const_iterator;
+
+        version_parser(literal_t& version);
 
      public:
         bool on(char c) {
@@ -19,7 +21,7 @@ namespace so {
         size_t get_number();
 
      private:
-        const char* cursor;
+        literal_t& cursor;
     };
 }
 

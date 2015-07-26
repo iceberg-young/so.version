@@ -12,10 +12,12 @@ namespace so {
         }
     }
 
-    version_parser::version_parser(const std::string& version) {
-        auto p = version.data();
-        while (*p and (*p < '0' or *p > '9')) {++p;}
-        this->cursor = p;
+    version_parser::version_parser(literal_t& version) :
+      cursor(version) {
+        char c = *this->cursor;
+        while (c and (c < '0' or c > '9')) {
+            c = *++this->cursor;
+        }
     }
 
     void version_parser::expect_dot() {
@@ -44,21 +46,22 @@ namespace so {
     }
 
     size_t version_parser::get_number() {
-        char* next = nullptr;
-        auto value = strtoul(this->cursor, &next, 10);
-        if (this->cursor == next) {
+        auto begin = &*this->cursor;
+        char* end = nullptr;
+        auto value = strtoul(begin, &end, 10);
+        if (begin == end) {
             throw version_parse_error{
               "Digit is expected, but got char(" + std::to_string(*this->cursor) + ")."
             };
         }
+        size_t length = end - begin;
         if (value == std::numeric_limits<decltype(value)>::max()) {
-            size_t length = next - this->cursor;
-            std::string number{this->cursor, length};
+            std::string number{begin, length};
             throw version_parse_error{
               number + " is too big (" + std::to_string(length) + " digits)."
             };
         }
-        this->cursor = next;
+        this->cursor += length;
         return value;
     }
 }

@@ -8,7 +8,7 @@ namespace so {
 
         size_t get_number(const std::string& id) {
             char* end = nullptr;
-            auto value = strtoul(id.data(), &end, 10);
+            auto value = strtoul(id.c_str(), &end, 10);
             static_assert(
               sizeof(size_t) == sizeof(decltype(value)),
               "The max value will be used to check overflow, so "
@@ -51,8 +51,8 @@ namespace so {
         return target;
     }
 
-    version version::parse(const std::string& text) {
-        version_parser parser{text.data()};
+    version version::parse(std::string::const_iterator& iterator) {
+        version_parser parser{iterator};
         size_t major = parser.get_number();
         parser.expect_dot();
         size_t minor = parser.get_number();
