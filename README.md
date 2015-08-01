@@ -1,7 +1,77 @@
 so.version
 ==========
 
-To compare version numbers as described in [SemVer.org]
+Compare [SemVer.org] described versions.
+
+
+API
+---
+
+See [version.hpp](include/version.hpp).
+
+- Construct from SemVer text.
+
+  ```cpp
+  static so::version::parse(std::string) -> so::version
+  ```
+
+  E.g.
+  ```cpp
+  auto v1 = so::version::parse("1.2.3-hello+linux");
+  auto v2 = so::version::parse("1.2.3+world");
+  ```
+
+- Convert to SemVer text.
+
+  ```cpp
+  so::version::operator std::string()
+  ```
+
+- Compare 2 `so::version` objects.
+
+  - `==`, `<`
+  - `!=`, `<=`, `>`, `>=`
+
+  E.g.
+  ```cpp
+  std::cout << std::boolalpha << (v1 < v2);
+  ```
+  > ```
+  > true
+  > ```
+
+- Deduce related versions.
+
+  ```cpp
+  so::version::next_major() -> so::version
+  so::version::next_minor() -> so::version
+  so::version::next_patch() -> so::version
+  so::version::release() -> so::version
+  so::version::general() -> so::version
+  ```
+
+  Plus a handy way.
+
+  ```cpp
+  so::version::operator+(so::version::change) -> so::version
+  ```
+
+  > **Under The Hood!**
+  > `so::version::change` is a bit flag enumeration.
+  > Bitwise **or** `|` and **xor** `^` are available. E.g.
+  > ```cpp
+  > using change = so::version::change;
+  > std::cout << std::string{v1 + (change::internal | change::compatible)};
+  > ```
+  >> ```
+  >> 1.3.0+linux
+  >> ```
+
+- Trivial check.
+
+  ```cpp
+  so::is::stable(so::version) -> bool
+  ```
 
 
 License
