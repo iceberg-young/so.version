@@ -1,5 +1,8 @@
-#ifndef INCLUDE_SO_VERSION_ONCE_FLAG
-#define INCLUDE_SO_VERSION_ONCE_FLAG
+/**
+ * @copyright 2015 Iceberg YOUNG
+ * @license GNU Lesser General Public License version 3
+ */
+#pragma once
 
 #include <list>
 #include <string>
@@ -198,5 +201,3 @@ namespace so {
         }
     }
 }
-
-#endif//INCLUDE_SO_VERSION_ONCE_FLAG
