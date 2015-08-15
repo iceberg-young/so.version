@@ -12,7 +12,8 @@ See [version.hpp](include/version.hpp).
 - Construct from SemVer text.
 
   ```cpp
-  static so::version::parse(std::string) -> so::version
+  static
+  so::version  so::version::parse(std::string);
   ```
 
   E.g.
@@ -24,7 +25,7 @@ See [version.hpp](include/version.hpp).
 - Convert to SemVer text.
 
   ```cpp
-  so::version::operator std::string()
+  so::version::operator std::string();
   ```
 
 - Compare 2 `so::version` objects.
@@ -43,17 +44,17 @@ See [version.hpp](include/version.hpp).
 - Deduce related versions.
 
   ```cpp
-  so::version::next_major() -> so::version
-  so::version::next_minor() -> so::version
-  so::version::next_patch() -> so::version
-  so::version::release() -> so::version
-  so::version::general() -> so::version
+  so::version  so::version::next_major();
+  so::version  so::version::next_minor();
+  so::version  so::version::next_patch();
+  so::version  so::version::release();
+  so::version  so::version::general();
   ```
 
   Plus a handy way.
 
   ```cpp
-  so::version::operator+(so::version::change) -> so::version
+  so::version  so::version::operator+(so::version::change);
   ```
 
   > **Under The Hood!**
@@ -70,7 +71,7 @@ See [version.hpp](include/version.hpp).
 - Trivial check.
 
   ```cpp
-  so::is::stable(so::version) -> bool
+  bool  so::is::stable(so::version);
   ```
 
 
