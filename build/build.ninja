@@ -1,0 +1,2 @@
+include rules.ninja
+include project.ninja
